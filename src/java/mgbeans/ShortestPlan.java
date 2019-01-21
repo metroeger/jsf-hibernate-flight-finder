@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 import org.hibernate.Session;
 import pojos.Airport;
@@ -23,7 +22,7 @@ import pojos.Route;
  */
 @ManagedBean
 @SessionScoped
-public class RoutePlan {
+public class ShortestPlan {
 
     private List<Airport> airports;
     private List<Route> routes;
@@ -43,7 +42,7 @@ public class RoutePlan {
     private String answer;
     private int stopCounter;
 
-    public RoutePlan() {
+    public ShortestPlan() {
         Session session = hibernate.HibernateUtil.getSessionFactory().openSession();
         airports = session.createQuery("FROM Airport").list();
         routes = session.createQuery("FROM Route").list();
@@ -65,9 +64,7 @@ public class RoutePlan {
         for (Airport ap : airports) {
             airportMap.put(ap.getCode(), ap);
         }
-
     }
-
 
     public void chooseOrigin(String origin) {
         firstAirport = airportMap.get(origin.substring(1, 4));

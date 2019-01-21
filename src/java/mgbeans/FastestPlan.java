@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 import org.hibernate.Session;
 import pojos.Airport;
@@ -21,7 +20,7 @@ import pojos.Route;
  * @author metroeger
  */
 @ManagedBean
-@RequestScoped
+@SessionScoped
 public class FastestPlan {
 
     private List<Airport> airports;
@@ -42,6 +41,7 @@ public class FastestPlan {
     private String answer;
 
     public FastestPlan() {
+
         Session session = hibernate.HibernateUtil.getSessionFactory().openSession();
         airports = session.createQuery("FROM Airport").list();
         routes = session.createQuery("FROM Route").list();
@@ -70,11 +70,11 @@ public class FastestPlan {
     }
 
     public void clear() {
-        try{
-        firstAirport = null;
-        lastAirport = null;
-        way.clear();
-        }catch(Exception e){
+        try {
+            firstAirport = null;
+            lastAirport = null;
+            way.clear();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -94,7 +94,6 @@ public class FastestPlan {
     public void fillTempRow() {
         for (int i = 0; i < airports.size(); i++) {
             Route v = findRoute(actualAirport, airports.get(i));
-            //if (v != null && !v.isVisited()) {
             if (v != null) {
                 for (int j = 0; j < tempRow.size(); j++) {
                     if (!tempRow.get(j).isVisited()) {
@@ -112,28 +111,13 @@ public class FastestPlan {
     public void fillFirstTempRow() {
         for (int i = 0; i < tempRow.size(); i++) {
             for (int j = 0; j < routes.size(); j++) {
-                // if this route exists
                 if (tempRow.get(i).getOrigin() == routes.get(j).getOrigin() && tempRow.get(i).getDestination() == routes.get(j).getDestination()
                         || tempRow.get(i).getDestination() == routes.get(j).getOrigin() && tempRow.get(i).getOrigin() == routes.get(j).getDestination()) {
-                    //set tempRow's route's weigthNow to route weight 
                     tempRow.get(i).setWeightNow(routes.get(j).getWeight());
                 }
             }
         }
     }
-
-//    public Route findRoute(Route route) {
-//
-//        for (Route r : routes) {
-//            if (route.getOrigin() == r.getOrigin() && route.getDestination() == r.getDestination()
-//                    || route.getDestination() == r.getOrigin() && route.getOrigin() == r.getDestination()) {
-//                if (!r.isVisited()) {
-//                    return r;
-//                }
-//            }
-//        }
-//        return null;
-//    }
 
     public Route findRoute(Airport a, Airport b) {
         for (Route r : routes) {
@@ -156,7 +140,6 @@ public class FastestPlan {
             }
         }
         takeAway = min;
-
         actualAirport = re.getDestination();
         re.setVisited(true);
     }
@@ -173,9 +156,7 @@ public class FastestPlan {
     public void calculateWay(Airport o, Airport d) {
         way = new ArrayList<>();
         finalWay = new ArrayList<>();
-
         Airport dest = d;
-
         do {
             for (Route r : tempRow) {
                 if (r.getDestination() == dest) {

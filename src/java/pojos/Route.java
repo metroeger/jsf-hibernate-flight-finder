@@ -14,9 +14,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "route",
-         catalog = "airports"
+        catalog = "airports"
 )
-public class Route implements java.io.Serializable{
+public class Route implements java.io.Serializable {
 
     private int id;
     private Airport airportByOrigin;
@@ -56,8 +56,8 @@ public class Route implements java.io.Serializable{
         this.weightNow = weight;
         this.visited = visited;
     }
-    
-        public Route(Airport airportByOrigin, Airport airportByDestination, int weight) {
+
+    public Route(Airport airportByOrigin, Airport airportByDestination, int weight) {
         this.airportByOrigin = airportByOrigin;
         this.airportByDestination = airportByDestination;
         this.weight = weight;
@@ -137,14 +137,4 @@ public class Route implements java.io.Serializable{
         return airportByOrigin + "-" + airportByDestination;
     }
 
-//
-//    @Override
-//    public int compareTo(Object o) {
-//        int compareName = ((Airport)o).getName().compareTo(this.airportByDestination.getName());
-//        return compareName;
-//    }
-
-
-
-    
 }

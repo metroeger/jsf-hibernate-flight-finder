@@ -100,8 +100,6 @@ public class Airport  implements java.io.Serializable {
     }
 
 
-
-
 }
 
 

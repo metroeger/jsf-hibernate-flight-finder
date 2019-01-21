@@ -15,54 +15,54 @@
         <div id="page">  
 
             <div id="header">    
-                <h1>CalculateRoutesApp</h1>  
+                <h1>CalculateRoutesApp (distances are fictive)</h1>  
             </div>  
             <div id="container" >    
                 <div style="border: cornflowerblue; background: crimson">
-                    <h1> DOMESTIC FLIGHTS AND ROUTES BETWEEN ITALY AND SPAIN</h1>  
+                    <h1> DOMESTIC AND INTERNATIONAL FLIGHTS/ROUTES BETWEEN ITALY AND SPAIN</h1>  
                 </div>  
                 
                 <div id="content">        
                     <h:form>
                         <br/>
-                        <h:selectOneMenu value="#{routePlan.choosenOrigin}">
-                            <f:selectItems value="#{routePlan.airports}"/>
+                        <h:selectOneMenu value="#{shortestPlan.choosenOrigin}">
+                            <f:selectItems value="#{shortestPlan.airports}"/>
                         </h:selectOneMenu>
-                        <h:commandButton value="Choose origin" action="#{routePlan.chooseOrigin(routePlan.choosenOrigin)}"/>
-                        <br/>Origin: #{routePlan.firstAirport.name}
+                        <h:commandButton value="Choose origin" action="#{shortestPlan.chooseOrigin(shortestPlan.choosenOrigin)}"/>
+                        <br/>Origin: #{shortestPlan.firstAirport.name}
                     </h:form>
 
-                    <h:form rendered="#{routePlan.showDestinations}">
+                    <h:form rendered="#{shortestPlan.showDestinations}">
                         <br/>
-                        <h:selectOneMenu value="#{routePlan.choosenDestination}">
-                            <f:selectItems value="#{routePlan.airports}"/>
+                        <h:selectOneMenu value="#{shortestPlan.choosenDestination}">
+                            <f:selectItems value="#{shortestPlan.airports}"/>
                         </h:selectOneMenu>
-                        <h:commandButton value="Choose destination" action="#{routePlan.chooseDestination(routePlan.choosenDestination)}"/>
-                        <br/>Destination #{routePlan.lastAirport.name}
+                        <h:commandButton value="Choose destination" action="#{shortestPlan.chooseDestination(shortestPlan.choosenDestination)}"/>
+                        <br/>Destination #{shortestPlan.lastAirport.name}
                         <br/>
                     </h:form>
 
-                    <h:form rendered="#{routePlan.lastAirport!=null}">
+                    <h:form rendered="#{shortestPlan.lastAirport!=null}">
                         <br/>
                         <h:outputText>
-                            #{routePlan.firstAirport}  #{routePlan.lastAirport}
+                            #{shortestPlan.firstAirport}  #{shortestPlan.lastAirport}
                         </h:outputText>
-                        <h:commandButton id="shortest" value="Calculate shortest way" action="#{routePlan.findFinalRoute()}"/>
-                        <h:commandButton id="fastest" value="Calculate fastest way" action="#{fastestPlan.findFinalRoute(routePlan.choosenOrigin, routePlan.choosenDestination)}"/>
+                        <h:commandButton id="shortest" value="Calculate shortest way" action="#{shortestPlan.findFinalRoute()}"/>
+                        <h:commandButton id="fastest" value="Calculate fastest way" action="#{fastestPlan.findFinalRoute(shortestPlan.choosenOrigin, shortestPlan.choosenDestination)}"/>
                         <br/>
                         <br/>
                     </h:form>
 
-                    <h:form rendered="#{routePlan.way.size()>0}">
+                    <h:form rendered="#{shortestPlan.way.size()>0}">
                         The shortest way is: <br/>
-                        #{routePlan.show()} <br/><br/>
+                        #{shortestPlan.show()} <br/><br/>
 
-                        <h:dataTable value="#{routePlan.reverse()}" style="border-style: ridge; border-color: moccasin; font-family: cursive" 
+                        <h:dataTable value="#{shortestPlan.reverse()}" style="border-style: ridge; border-color: moccasin; font-family: cursive" 
                                      var="route">
                             <h:column>
                                 <f:facet name="header">Origin</f:facet>
                                 #{route.origin} ->
-                                <f:facet name="footer"><h:commandButton value="Clear all" action="#{routePlan.clear()}"/></f:facet>
+                                <f:facet name="footer"><h:commandButton value="Clear" action="#{shortestPlan.clear()}"/></f:facet>
                             </h:column>        
                             <h:column>
                                 <f:facet name="header">Destination</f:facet>
@@ -70,14 +70,13 @@
                             </h:column>
                             <h:column>
                                 <f:facet name="header">Between</f:facet>
-                                    #{(routePlan.findRoute(route)).weight}
+                                    #{(shortestPlan.findRoute(route)).weight}
                             </h:column>
                             <h:column>
                                 <f:facet name="header">Distance</f:facet>
                                     #{route.weightNow} 
-                                <f:facet name="footer"><br/>#{routePlan.stopCounter} stops</f:facet>
+                                <f:facet name="footer"><br/>#{shortestPlan.stopCounter} stops</f:facet>
                             </h:column>
-
                         </h:dataTable> <br/>
                     </h:form> <br/>
 
@@ -87,12 +86,12 @@
                         #{fastestPlan.show()} <br/>
                         You have #{(fastestPlan.finalWay.get(0)).weightNow} stops.
                         <br/>
-                        <h:commandButton value="Clear all" action="#{fastestPlan.clear()}"/>
+                        <h:commandButton value="Clear" action="#{fastestPlan.clear()}"/>
                         <br/>
                     </h:form><br/>
 
                     <h:form>                       
-                        <h:dataTable value="#{routePlan.routes}" style="border-style: ridge; border-color: #6699ff; font-family: cursive" 
+                        <h:dataTable value="#{shortestPlan.routes}" style="border-style: ridge; border-color: #6699ff; font-family: cursive" 
                                      var="route">
                             <h:column>
                                 <f:facet name="header">Origin</f:facet>
@@ -104,7 +103,11 @@
                             </h:column>
                             <h:column>
                                 <f:facet name="header">Distance</f:facet>
-                                    #{route.weight}
+                                    #{route.weight} km
+                            </h:column>
+                              <h:column>
+                                <f:facet name="header">Country</f:facet>
+                                    #{route.origin.countryCode}-#{route.destination.countryCode}
                             </h:column>
                         </h:dataTable> <br/>
                     </h:form>
