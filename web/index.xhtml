@@ -1,12 +1,121 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
-        <title>Facelet Title</title>
+        <title>Search shortest/fastest wasy</title>
+        <style>
+            .Bimage{background-image: url("resources/img2.jpg"); background-attachment:fixed; background-size: cover}
+        </style>
     </h:head>
-    <h:body>
-        Hello from Facelets
+    <h:body styleClass="Bimage">
+
+        <div id="page">  
+
+            <div id="header">    
+                <h1>CalculateRoutesApp</h1>  
+            </div>  
+            <div id="container" >    
+                <div style="border: cornflowerblue; background: crimson">
+                    <h1> DOMESTIC FLIGHTS AND ROUTES BETWEEN ITALY AND SPAIN</h1>  
+                </div>  
+                
+                <div id="content">        
+                    <h:form>
+                        <br/>
+                        <h:selectOneMenu value="#{routePlan.choosenOrigin}">
+                            <f:selectItems value="#{routePlan.airports}"/>
+                        </h:selectOneMenu>
+                        <h:commandButton value="Choose origin" action="#{routePlan.chooseOrigin(routePlan.choosenOrigin)}"/>
+                        <br/>Origin: #{routePlan.firstAirport.name}
+                    </h:form>
+
+                    <h:form rendered="#{routePlan.showDestinations}">
+                        <br/>
+                        <h:selectOneMenu value="#{routePlan.choosenDestination}">
+                            <f:selectItems value="#{routePlan.airports}"/>
+                        </h:selectOneMenu>
+                        <h:commandButton value="Choose destination" action="#{routePlan.chooseDestination(routePlan.choosenDestination)}"/>
+                        <br/>Destination #{routePlan.lastAirport.name}
+                        <br/>
+                    </h:form>
+
+                    <h:form rendered="#{routePlan.lastAirport!=null}">
+                        <br/>
+                        <h:outputText>
+                            #{routePlan.firstAirport}  #{routePlan.lastAirport}
+                        </h:outputText>
+                        <h:commandButton id="shortest" value="Calculate shortest way" action="#{routePlan.findFinalRoute()}"/>
+                        <h:commandButton id="fastest" value="Calculate fastest way" action="#{fastestPlan.findFinalRoute(routePlan.choosenOrigin, routePlan.choosenDestination)}"/>
+                        <br/>
+                        <br/>
+                    </h:form>
+
+                    <h:form rendered="#{routePlan.way.size()>0}">
+                        The shortest way is: <br/>
+                        #{routePlan.show()} <br/><br/>
+
+                        <h:dataTable value="#{routePlan.reverse()}" style="border-style: ridge; border-color: moccasin; font-family: cursive" 
+                                     var="route">
+                            <h:column>
+                                <f:facet name="header">Origin</f:facet>
+                                #{route.origin} ->
+                                <f:facet name="footer"><h:commandButton value="Clear all" action="#{routePlan.clear()}"/></f:facet>
+                            </h:column>        
+                            <h:column>
+                                <f:facet name="header">Destination</f:facet>
+                                    #{route.destination}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Between</f:facet>
+                                    #{(routePlan.findRoute(route)).weight}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Distance</f:facet>
+                                    #{route.weightNow} 
+                                <f:facet name="footer"><br/>#{routePlan.stopCounter} stops</f:facet>
+                            </h:column>
+
+                        </h:dataTable> <br/>
+                    </h:form> <br/>
+
+                    <h:form rendered="#{fastestPlan.way.size()>0}" style="border-style: ridge; border-color: coral; font-size: larger; font-family: cursive">
+                        <br/>
+                        The fastest way is: <br/>
+                        #{fastestPlan.show()} <br/>
+                        You have #{(fastestPlan.finalWay.get(0)).weightNow} stops.
+                        <br/>
+                        <h:commandButton value="Clear all" action="#{fastestPlan.clear()}"/>
+                        <br/>
+                    </h:form><br/>
+
+                    <h:form>                       
+                        <h:dataTable value="#{routePlan.routes}" style="border-style: ridge; border-color: #6699ff; font-family: cursive" 
+                                     var="route">
+                            <h:column>
+                                <f:facet name="header">Origin</f:facet>
+                                    #{route.origin}
+                            </h:column>        
+                            <h:column>
+                                <f:facet name="header">Destination</f:facet>
+                                    #{route.destination}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Distance</f:facet>
+                                    #{route.weight}
+                            </h:column>
+                        </h:dataTable> <br/>
+                    </h:form>
+                </div>   
+            </div> 
+
+            <div id="footer">
+                by metroeger
+            </div>  
+        </div>
+
     </h:body>
 </html>
 

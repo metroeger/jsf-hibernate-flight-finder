@@ -76,7 +76,7 @@ public class Airport  implements java.io.Serializable {
         this.countryCode = countryCode;
     }
 
-@OneToMany(fetch=FetchType.LAZY, mappedBy="airportByOrigin")
+@OneToMany(fetch=FetchType.LAZY, mappedBy="origin")
     public Set<Route> getRoutesForOrigin() {
         return this.routesForOrigin;
     }
@@ -85,13 +85,18 @@ public class Airport  implements java.io.Serializable {
         this.routesForOrigin = routesForOrigin;
     }
 
-@OneToMany(fetch=FetchType.LAZY, mappedBy="airportByDestination")
+@OneToMany(fetch=FetchType.LAZY, mappedBy="destination")
     public Set<Route> getRoutesForDestination() {
         return this.routesForDestination;
     }
     
     public void setRoutesForDestination(Set<Route> routesForDestination) {
         this.routesForDestination = routesForDestination;
+    }
+
+    @Override
+    public String toString() {
+        return "("+code+") "+ name;
     }
 
 
